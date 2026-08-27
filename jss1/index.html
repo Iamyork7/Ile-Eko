@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a5276">
+    <title>JSS 1 | Ile-Eko</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #f39c12;
+            --success: #27ae60;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #e8f4f8 0%, #f5f7fa 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .app-header h1 { font-size: 1.6rem; font-weight: 700; }
+        .app-header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+        .breadcrumb {
+            background: white;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.8rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .breadcrumb a { color: #2874a6; text-decoration: none; font-weight: 600; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .hero {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .hero h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
+        .hero p { color: #6c757d; font-size: 0.9rem; line-height: 1.6; }
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin: 24px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .subject-list { display: flex; flex-direction: column; gap: 12px; }
+        .subject-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .subject-item:hover { border-left: 4px solid var(--accent); }
+        .subject-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .subject-info { flex: 1; }
+        .subject-info h4 { font-size: 1rem; color: var(--dark); }
+        .subject-info p { font-size: 0.8rem; color: #6c757d; margin-top: 2px; }
+        .subject-arrow { color: #adb5bd; font-size: 1.2rem; }
+        .app-footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 480px) {
+            .app-header h1 { font-size: 1.3rem; }
+            .container { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <h1>🎒 JSS 1</h1>
+        <p>Basic Science and Technology Curriculum</p>
+    </header>
+    <div class="breadcrumb">
+        <a href="../index.html">🏠 Home</a>
+        <span>/</span>
+        <span>🎒 JSS 1</span>
+    </div>
+    <div class="container">
+        <div class="hero">
+            <h2>📖 Select Your Subject</h2>
+            <p>Choose a subject below to explore topics and interactive lessons.</p>
+        </div>
+        <h3 class="section-title">📚 Subjects</h3>
+        <div class="subject-list">
+            <a href="computer-studies/index.html" class="subject-item">
+                <div class="subject-icon" style="background:#e8f4f8;">💻</div>
+                <div class="subject-info">
+                    <h4>Computer Studies</h4>
+                    <p>3 topics available | 1 interactive simulation</p>
+                </div>
+                <div class="subject-arrow">▶</div>
+            </a>
+            <a href="mathematics/index.html" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                <div class="subject-icon" style="background:#f8f9fa;">📐</div>
+                <div class="subject-info">
+                    <h4>Mathematics</h4>
+                    <p>Coming in Phase 2</p>
+                </div>
+                <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+            </a>
+            <a href="english-studies/index.html" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                <div class="subject-icon" style="background:#f8f9fa;">📖</div>
+                <div class="subject-info">
+                    <h4>English Studies</h4>
+                    <p>Coming in Phase 2</p>
+                </div>
+                <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+            </a>
+            <a href="basic-science/index.html" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                <div class="subject-icon" style="background:#f8f9fa;">🔬</div>
+                <div class="subject-info">
+                    <h4>Basic Science</h4>
+                    <p>Coming in Phase 2</p>
+                </div>
+                <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+            </a>
+        </div>
+    </div>
+    <footer class="app-footer">
+        <p>🏫 Ile-Eko Offline Digital Library</p>
+        <p>Lagos State Ministry of Education | 2026</p>
+    </footer>
+</body>
+</html>
