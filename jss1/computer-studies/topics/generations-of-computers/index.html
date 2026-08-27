@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ile-Eko | Generations of Computers</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #f39c12;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: var(--dark);
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 1.3rem; margin-bottom: 5px; }
+        header p { font-size: 0.85rem; opacity: 0.9; }
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .back-link:hover { opacity: 1; }
+        .lesson-nav {
+            display: flex;
+            background: var(--light);
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+        .lesson-nav button {
+            flex: 1;
+            padding: 14px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        .lesson-nav button.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: white;
+        }
+        .content { padding: 20px; }
+        .section { display: none; animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .intro-box {
+            background: #e8f4f8;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .objectives {
+            background: #fff3cd;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .objectives h3 { color: #856404; margin-bottom: 8px; font-size: 1rem; }
+        .objectives ul { margin-left: 18px; color: #856404; font-size: 0.9rem; }
+        .objectives li { margin-bottom: 5px; }
+
+        .gen-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .gen-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .gen-card:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: var(--secondary); }
+        .gen-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .gen-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .gen-year { color: #6c757d; font-size: 0.85rem; font-weight: 600; }
+        .gen-tech { color: var(--secondary); font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+        .gen-desc { font-size: 0.85rem; color: #495057; line-height: 1.5; }
+        .gen-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .gen-feature {
+            background: #e8f4f8;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sim-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 25px;
+            color: white;
+            margin-top: 20px;
+        }
+        .sim-header { text-align: center; margin-bottom: 20px; }
+        .sim-header h2 { font-size: 1.2rem; margin-bottom: 5px; }
+        .sim-header p { opacity: 0.9; font-size: 0.85rem; }
+
+        .items-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+            min-height: 60px;
+            padding: 15px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+        .draggable-item {
+            background: white;
+            color: var(--dark);
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: grab;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            touch-action: none;
+        }
+        .draggable-item:active { cursor: grabbing; transform: scale(1.05); }
+        .draggable-item.selected { outline: 3px solid var(--accent); transform: scale(1.05); }
+        .draggable-item.correct { background: var(--success); color: white; }
+        .draggable-item.wrong { background: var(--danger); color: white; }
+        .draggable-item.placed { opacity: 0.4; pointer-events: none; }
+
+        .drop-zones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+        .drop-zone {
+            background: rgba(255,255,255,0.95);
+            color: var(--dark);
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 130px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            cursor: pointer;
+        }
+        .drop-zone h4 { color: var(--primary); margin-bottom: 6px; font-size: 0.9rem; }
+        .drop-zone .zone-items { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 8px; min-height: 30px; }
+        .drop-zone.highlight { border-color: var(--accent); transform: scale(1.02); }
+        .drop-zone.correct-zone { border-color: var(--success); }
+        .drop-zone.wrong-zone { border-color: var(--danger); }
+        .drop-zone .instructions { font-size: 0.7rem; color: #6c757d; margin-top: 3px; }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .score-item h3 { font-size: 1.5rem; }
+        .score-item p { font-size: 0.8rem; opacity: 0.8; }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #e67e22; transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: white; border: 2px solid white; }
+        .btn-outline:hover { background: white; color: var(--primary); }
+
+        .feedback-msg {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+        .feedback-msg.show { display: block; animation: fadeIn 0.5s; }
+        .feedback-msg.success { background: #d4edda; color: #155724; }
+        .feedback-msg.info { background: #d1ecf1; color: #0c5460; }
+        .feedback-msg.warning { background: #fff3cd; color: #856404; }
+
+        .quiz-container { margin-top: 20px; }
+        .quiz-question {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+        }
+        .quiz-options { margin-top: 10px; }
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .quiz-option:hover { border-color: var(--secondary); background: #f8f9fa; }
+        .quiz-option.selected { border-color: var(--primary); background: #e8f4f8; }
+        .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+        .quiz-option.incorrect { border-color: var(--danger); background: #f8d7da; }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--secondary));
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .detail-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            border-left: 4px solid var(--secondary);
+        }
+        .detail-box h4 { color: var(--primary); margin-bottom: 8px; }
+        .detail-box p { font-size: 0.9rem; line-height: 1.6; }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+        .compare-table th, .compare-table td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+        .compare-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        .compare-table tr:nth-child(even) { background: #f8f9fa; }
+        .compare-table tr:hover { background: #e8f4f8; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.1rem; }
+            .drop-zones { grid-template-columns: 1fr 1fr; }
+            .sim-container { padding: 15px; }
+            .lesson-nav button { font-size: 0.7rem; padding: 12px 8px; min-width: 70px; }
+            .compare-table { font-size: 0.75rem; }
+            .compare-table th, .compare-table td { padding: 6px; }
+        }
+        @media (max-width: 400px) {
+            .drop-zones { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../../index.html" class="back-link">← Back to Library</a>
+            <h1>📘 Ile-Eko Digital Learning Module</h1>
+            <p>Basic Computer Studies — Generations of Computers</p>
+        </header>
+
+        <nav class="lesson-nav">
+            <button class="active" onclick="showSection('learn')">📖 Learn</button>
+            <button onclick="showSection('explore')">🔍 Explore</button>
+            <button onclick="showSection('simulate')">🧪 Simulate</button>
+            <button onclick="showSection('assess')">✅ Assess</button>
+        </nav>
+
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+        <div class="content">
+            <div id="learn" class="section active">
+                <div class="objectives">
+                    <h3>🎯 Learning Objectives</h3>
+                    <ul>
+                        <li>Identify the various <strong>computer generations</strong> with examples</li>
+                        <li>Describe each generation with respect to <strong>year of development</strong>, <strong>technology used</strong>, and <strong>size/speed</strong></li>
+                        <li>Compare electronic counting devices with <strong>modern computers</strong></li>
+                    </ul>
+                </div>
+
+                <div class="intro-box">
+                    <h3>💡 What are Computer Generations?</h3>
+                    <p>Computer generations refer to the major phases in the development of computer technology. Each generation is defined by the <strong>technology used to build the computer's internal components</strong>, especially the processor. As technology advanced, computers became smaller, faster, cheaper, and more powerful.</p>
+                    <p style="margin-top:10px"><em>Think of it like upgrading your phone — each new model uses better technology than the last!</em></p>
+                </div>
+
+                <h3 style="margin: 20px 0 10px; color: var(--primary);">📅 The Five Generations of Computers</h3>
+                <div class="gen-timeline">
+                    <div class="gen-card" onclick="showDetail('gen1')">
+                        <div class="gen-header">
+                            <span class="gen-badge">1st Gen</span>
+                            <span class="gen-year">1940 — 1956</span>
+                        </div>
+                        <div class="gen-tech">🔌 Vacuum Tubes</div>
+                        <div class="gen-desc">The first electronic computers used thousands of vacuum tubes. They were enormous, generated massive heat, and were very slow by today's standards.</div>
+                        <div class="gen-features">
+                            <span class="gen-feature">Room-sized</span>
+                            <span class="gen-feature">Machine language</span>
+                            <span class="gen-feature">ENIAC, UNIVAC</span>
+                        </div>
+                    </div>
+                    <div class="gen-card" onclick="showDetail('gen2')">
+                        <div class="gen-header">
+                            <span class="gen-badge">2nd Gen</span>
+                            <span class="gen-year">1956 — 1963</span>
+                        </div>
+                        <div class="gen-tech">🔬 Transistors</div>
+                        <div class="gen-desc">Transistors replaced vacuum tubes, making computers smaller, faster, more reliable, and more energy-efficient. They also generated less heat.</div>
+                        <div class="gen-features">
+                            <span class="gen-feature">Assembly language</span>
+                            <span class="gen-feature">Magnetic core memory</span>
+                            <span class="gen-feature">IBM 1401</span>
+                        </div>
+                    </div>
+                    <div class="gen-card" onclick="showDetail('gen3')">
+                        <div class="gen-header">
+                            <span class="gen-badge">3rd Gen</span>
+                            <span class="gen-year">1964 — 1971</span>
+                        </div>
+                        <div class="gen-tech">🧩 Integrated Circuits (ICs)</div>
+                        <div class="gen-desc">Multiple transistors were packed onto a single silicon chip called an Integrated Circuit (IC). This made computers even smaller and faster.</div>
+                        <div class="gen-features">
+                            <span class="gen-feature">High-level languages</span>
+                            <span class="gen-feature">Keyboard & Monitor</span>
+                            <span class="gen-feature">IBM 360</span>
+                        </div>
+                    </div>
+                    <div class="gen-card" onclick="showDetail('gen4')">
+                        <div class="gen-header">
+                            <span class="gen-badge">4th Gen</span>
+                            <span class="gen-year">1971 — Present</span>
+                        </div>
+                        <div class="gen-tech">🖥️ Microprocessors</div>
+                        <div class="gen-desc">The entire CPU was placed on a single chip — the microprocessor. This led to personal computers (PCs), laptops, and smartphones.</div>
+                        <div class="gen-features">
+                            <span class="gen-feature">GUI (Windows/Mac)</span>
+                            <span class="gen-feature">Internet</span>
+                            <span class="gen-feature">Intel, AMD</span>
+                        </div>
+                    </div>
+                    <div class="gen-card" onclick="showDetail('gen5')">
+                        <div class="gen-header">
+                            <span class="gen-badge">5th Gen</span>
+                            <span class="gen-year">Present — Future</span>
+                        </div>
+                        <div class="gen-tech">🤖 Artificial Intelligence</div>
+                        <div class="gen-desc">Fifth-generation computers use AI, quantum computing, and natural language processing. They can learn, reason, and solve complex problems.</div>
+                        <div class="gen-features">
+                            <span class="gen-feature">AI & Robotics</span>
+                            <span class="gen-feature">Quantum computing</span>
+                            <span class="gen-feature">Voice recognition</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-box" id="detailBox">
+                    <h4 id="detailTitle"></h4>
+                    <p id="detailText"></p>
+                </div>
+
+                <h3 style="margin: 24px 0 10px; color: var(--primary);">📊 Comparison Table</h3>
+                <table class="compare-table">
+                    <tr><th>Generation</th><th>Technology</th><th>Size</th><th>Speed</th><th>Language</th></tr>
+                    <tr><td><strong>1st</strong></td><td>Vacuum Tubes</td><td>Room-sized</td><td>Very Slow</td><td>Machine</td></tr>
+                    <tr><td><strong>2nd</strong></td><td>Transistors</td><td>Smaller</td><td>Faster</td><td>Assembly</td></tr>
+                    <tr><td><strong>3rd</strong></td><td>Integrated Circuits</td><td>Desk-sized</td><td>Much Faster</td><td>High-level</td></tr>
+                    <tr><td><strong>4th</strong></td><td>Microprocessors</td><td>Desktop/Laptop</td><td>Very Fast</td><td>GUI-based</td></tr>
+                    <tr><td><strong>5th</strong></td><td>AI / Quantum</td><td>Varies</td><td>Ultra Fast</td><td>Natural Language</td></tr>
+                </table>
+            </div>
+
+            <div id="explore" class="section">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">🔍 Interactive Generation Explorer</h3>
+                <p style="margin-bottom: 20px; color: #6c757d;">Tap each generation card to reveal full details, key inventions, and environmental requirements.</p>
+                <div class="gen-timeline" id="explorerGrid"></div>
+                <div class="detail-box" id="exploreDetailBox" style="display:none;">
+                    <h4 id="exploreDetailTitle"></h4>
+                    <p id="exploreDetailText"></p>
+                </div>
+            </div>
+
+            <div id="simulate" class="section">
+                <div class="sim-container">
+                    <div class="sim-header">
+                        <h2>🧪 Generation Matching Lab</h2>
+                        <p>Match each technology or feature to the correct computer generation. Score at least 80% to pass! 🎯</p>
+                    </div>
+
+                    <div class="score-board">
+                        <div class="score-item"><h3 id="scoreCorrect">0</h3><p>✅ Correct</p></div>
+                        <div class="score-item"><h3 id="scoreWrong">0</h3><p>❌ Wrong</p></div>
+                        <div class="score-item"><h3 id="scoreRemaining">15</h3><p>⏳ Remaining</p></div>
+                        <div class="score-item"><h3 id="scorePercent">0%</h3><p>📊 Accuracy</p></div>
+                    </div>
+
+                    <div class="items-pool" id="itemsPool"></div>
+
+                    <div class="drop-zones">
+                        <div class="drop-zone" data-category="gen1" onclick="handleZoneClick(this)">
+                            <h4>🔌 1st Gen</h4>
+                            <p class="instructions">Vacuum Tubes Era</p>
+                            <div class="zone-items" id="gen1Items"></div>
+                        </div>
+                        <div class="drop-zone" data-category="gen2" onclick="handleZoneClick(this)">
+                            <h4>🔬 2nd Gen</h4>
+                            <p class="instructions">Transistors Era</p>
+                            <div class="zone-items" id="gen2Items"></div>
+                        </div>
+                        <div class="drop-zone" data-category="gen3" onclick="handleZoneClick(this)">
+                            <h4>🧩 3rd Gen</h4>
+                            <p class="instructions">Integrated Circuits</p>
+                            <div class="zone-items" id="gen3Items"></div>
+                        </div>
+                        <div class="drop-zone" data-category="gen4" onclick="handleZoneClick(this)">
+                            <h4>🖥️ 4th Gen</h4>
+                            <p class="instructions">Microprocessors</p>
+                            <div class="zone-items" id="gen4Items"></div>
+                        </div>
+                        <div class="drop-zone" data-category="gen5" onclick="handleZoneClick(this)">
+                            <h4>🤖 5th Gen</h4>
+                            <p class="instructions">AI & Quantum</p>
+                            <div class="zone-items" id="gen5Items"></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-outline" onclick="resetSimulation()">🔄 Reset Lab</button>
+                        <button class="btn btn-primary" onclick="checkAnswers()">✓ Check Answers</button>
+                    </div>
+
+                    <div id="simFeedback" class="feedback-msg"></div>
+                </div>
+            </div>
+
+            <div id="assess" class="section">
+                <h3 style="color: var(--primary); margin-bottom: 5px;">✅ Quick Assessment</h3>
+                <p style="color: #6c757d; margin-bottom: 20px; font-size: 0.9rem;">Answer these 3 questions to complete today's topic. 📝</p>
+                <div class="quiz-container" id="quizContainer"></div>
+                <div id="quizResult" style="text-align: center; margin-top: 20px; display: none;">
+                    <h2 id="resultTitle"></h2>
+                    <p id="resultText" style="margin: 10px 0;"></p>
+                    <button class="btn btn-primary" onclick="resetQuiz()" style="background:var(--primary);">🔄 Try Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.lesson-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+            updateProgress();
+        }
+        function updateProgress() {
+            const sections = ['learn', 'explore', 'simulate', 'assess'];
+            const current = document.querySelector('.section.active').id;
+            const idx = sections.indexOf(current);
+            document.getElementById('progressFill').style.width = ((idx + 1) / 4 * 100) + '%';
+        }
+
+        const details = {
+            gen1: {
+                title: "🔌 First Generation (1940–1956)",
+                text: "<strong>Technology:</strong> Vacuum tubes — glass tubes that controlled electric current.<br><br><strong>Key Features:</strong><br>• Computers were as large as rooms and weighed tons<br>• Used machine language (0s and 1s) — very difficult to program<br>• Generated so much heat they needed air conditioning<br>• Very unreliable — tubes burned out frequently<br><br><strong>Examples:</strong> ENIAC, UNIVAC I, EDVAC<br><br><strong>Environmental Need:</strong> Large rooms with powerful cooling systems."
+            },
+            gen2: {
+                title: "🔬 Second Generation (1956–1963)",
+                text: "<strong>Technology:</strong> Transistors — tiny semiconductor devices that replaced vacuum tubes.<br><br><strong>Key Features:</strong><br>• Much smaller and faster than 1st generation<br>• Used assembly language (mnemonics like ADD, SUB)<br>• More reliable and generated less heat<br>• First operating systems appeared<br><br><strong>Examples:</strong> IBM 1401, IBM 7090, UNIVAC 1107<br><br><strong>Environmental Need:</strong> Smaller rooms, less cooling required."
+            },
+            gen3: {
+                title: "🧩 Third Generation (1964–1971)",
+                text: "<strong>Technology:</strong> Integrated Circuits (ICs) — multiple transistors on a single silicon chip.<br><br><strong>Key Features:</strong><br>• Computers became smaller and much faster<br>• High-level programming languages (BASIC, COBOL, FORTRAN)<br>• Keyboards and monitors became standard<br>• Time-sharing: multiple users could use one computer<br><br><strong>Examples:</strong> IBM System/360, PDP-8<br><br><strong>Environmental Need:</strong> Standard office environments."
+            },
+            gen4: {
+                title: "🖥️ Fourth Generation (1971–Present)",
+                text: "<strong>Technology:</strong> Microprocessors — the entire CPU on a single chip.<br><br><strong>Key Features:</strong><br>• Personal Computers (PCs) became available to everyone<br>• Graphical User Interface (GUI) — point and click with a mouse<br>• The Internet revolutionized communication<br>• Laptops, tablets, and smartphones were developed<br><br><strong>Examples:</strong> Intel 4004, Apple II, IBM PC, modern laptops<br><br><strong>Environmental Need:</strong> Can be used anywhere — homes, schools, offices."
+            },
+            gen5: {
+                title: "🤖 Fifth Generation (Present — Future)",
+                text: "<strong>Technology:</strong> Artificial Intelligence, Quantum Computing, and Parallel Processing.<br><br><strong>Key Features:</strong><br>• Computers can learn, reason, and make decisions (AI)<br>• Natural language processing — talk to computers like humans<br>• Quantum computers solve problems impossible for classical computers<br>• Robotics and automation in everyday life<br><br><strong>Examples:</strong> IBM Watson, Google DeepMind, ChatGPT, quantum computers<br><br><strong>Environmental Need:</strong> Specialized labs for quantum; AI runs on standard devices."
+            }
+        };
+        function showDetail(type) {
+            const box = document.getElementById('detailBox');
+            document.getElementById('detailTitle').innerHTML = details[type].title;
+            document.getElementById('detailText').innerHTML = details[type].text;
+            box.style.display = 'block';
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        const genData = [
+            { name: "1st Generation", icon: "🔌", type: "gen1", year: "1940–1956", tech: "Vacuum Tubes", desc: "Room-sized machines using thousands of glass vacuum tubes. Very slow, hot, and unreliable. Programs written in pure binary (0s and 1s).", examples: "ENIAC, UNIVAC I", size: "Room-sized", speed: "Milliseconds", lang: "Machine Language" },
+            { name: "2nd Generation", icon: "🔬", type: "gen2", year: "1956–1963", tech: "Transistors", desc: "Transistors replaced vacuum tubes, making computers smaller, faster, and more reliable. Assembly language made programming easier.", examples: "IBM 1401, IBM 7090", size: "Cabinet-sized", speed: "Microseconds", lang: "Assembly Language" },
+            { name: "3rd Generation", icon: "🧩", type: "gen3", year: "1964–1971", tech: "Integrated Circuits", desc: "Multiple transistors packed onto silicon chips. High-level languages appeared. Keyboards and monitors became standard.", examples: "IBM System/360, PDP-8", size: "Desk-sized", speed: "Nanoseconds", lang: "BASIC, COBOL, FORTRAN" },
+            { name: "4th Generation", icon: "🖥️", type: "gen4", year: "1971–Present", tech: "Microprocessors", desc: "Entire CPU on one chip. Personal computers, GUIs, and the Internet transformed society. Computing became accessible to everyone.", examples: "Intel 4004, Apple II, IBM PC", size: "Desktop/Laptop", speed: "Picoseconds", lang: "C, Java, Python, GUI" },
+            { name: "5th Generation", icon: "🤖", type: "gen5", year: "Present–Future", tech: "AI / Quantum", desc: "Artificial Intelligence, quantum computing, and natural language processing. Computers can learn, reason, and understand speech.", examples: "IBM Watson, ChatGPT, Quantum PCs", size: "Varies", speed: "Exascale", lang: "Natural Language" }
+        ];
+
+        function initExplorer() {
+            const grid = document.getElementById('explorerGrid');
+            genData.forEach(g => {
+                const div = document.createElement('div');
+                div.className = 'gen-card';
+                div.innerHTML = `
+                    <div class="gen-header">
+                        <span class="gen-badge">${g.icon} ${g.name}</span>
+                        <span class="gen-year">${g.year}</span>
+                    </div>
+                    <div class="gen-tech">${g.tech}</div>
+                    <div class="gen-desc">${g.desc}</div>
+                    <div class="gen-features">
+                        <span class="gen-feature">${g.size}</span>
+                        <span class="gen-feature">${g.speed}</span>
+                        <span class="gen-feature">${g.lang}</span>
+                    </div>
+                `;
+                div.onclick = () => {
+                    const box = document.getElementById('exploreDetailBox');
+                    document.getElementById('exploreDetailTitle').innerHTML = `${g.icon} ${g.name} (${g.year})`;
+                    document.getElementById('exploreDetailText').innerHTML = `
+                        <strong>Core Technology:</strong> ${g.tech}<br>
+                        <strong>Size:</strong> ${g.size}<br>
+                        <strong>Speed:</strong> ${g.speed}<br>
+                        <strong>Language:</strong> ${g.lang}<br>
+                        <strong>Examples:</strong> ${g.examples}<br><br>
+                        ${g.desc}
+                    `;
+                    box.style.display = 'block';
+                    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                };
+                grid.appendChild(div);
+            });
+        }
+        initExplorer();
+
+        const simItems = [
+            { name: "Vacuum Tubes", icon: "🔌", type: "gen1" },
+            { name: "ENIAC", icon: "🏭", type: "gen1" },
+            { name: "Machine Language", icon: "0️⃣", type: "gen1" },
+            { name: "Room-sized", icon: "🏠", type: "gen1" },
+            { name: "Transistors", icon: "🔬", type: "gen2" },
+            { name: "IBM 1401", icon: "💾", type: "gen2" },
+            { name: "Assembly Language", icon: "📋", type: "gen2" },
+            { name: "Magnetic Core", icon: "🧲", type: "gen2" },
+            { name: "Integrated Circuits", icon: "🧩", type: "gen3" },
+            { name: "IBM System/360", icon: "🖥️", type: "gen3" },
+            { name: "BASIC Language", icon: "⌨️", type: "gen3" },
+            { name: "Keyboard + Monitor", icon: "🖱️", type: "gen3" },
+            { name: "Microprocessors", icon: "⚡", type: "gen4" },
+            { name: "Internet", icon: "🌐", type: "gen4" },
+            { name: "GUI (Windows)", icon: "🪟", type: "gen4" }
+        ];
+
+        let simState = { correct: 0, wrong: 0, remaining: 15, placed: [] };
+        let selectedItem = null;
+
+        function initSimulation() {
+            const pool = document.getElementById('itemsPool');
+            pool.innerHTML = '';
+            const shuffled = [...simItems].sort(() => Math.random() - 0.5);
+            shuffled.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = 'draggable-item';
+                el.dataset.name = item.name;
+                el.dataset.type = item.type;
+                el.dataset.id = idx;
+                el.innerHTML = `${item.icon} ${item.name}`;
+                el.onclick = () => selectItem(el);
+                pool.appendChild(el);
+            });
+            resetSimState();
+        }
+
+        function resetSimState() {
+            simState = { correct: 0, wrong: 0, remaining: 15, placed: [] };
+            selectedItem = null;
+            ['gen1Items', 'gen2Items', 'gen3Items', 'gen4Items', 'gen5Items'].forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            document.querySelectorAll('.drop-zone').forEach(z => {
+                z.classList.remove('correct-zone', 'wrong-zone');
+            });
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.classList.remove('selected', 'correct', 'wrong', 'placed');
+                item.style.opacity = '1';
+                item.style.pointerEvents = 'auto';
+            });
+            updateScore();
+            const fb = document.getElementById('simFeedback');
+            fb.className = 'feedback-msg';
+            fb.innerHTML = '';
+        }
+
+        function resetSimulation() {
+            initSimulation();
+        }
+
+        function updateScore() {
+            document.getElementById('scoreCorrect').textContent = simState.correct;
+            document.getElementById('scoreWrong').textContent = simState.wrong;
+            document.getElementById('scoreRemaining').textContent = simState.remaining;
+            const total = simState.correct + simState.wrong;
+            const pct = total === 0 ? 0 : Math.round((simState.correct / total) * 100);
+            document.getElementById('scorePercent').textContent = pct + '%';
+        }
+
+        function selectItem(item) {
+            if (item.classList.contains('placed')) return;
+            document.querySelectorAll('.draggable-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            selectedItem = item;
+            showFeedback('simFeedback', 'info', `👆 Selected: ${item.dataset.name}. Now tap a generation box below to place it!`);
+        }
+
+        function handleZoneClick(zone) {
+            if (!selectedItem || selectedItem.classList.contains('placed')) return;
+            const itemType = selectedItem.dataset.type;
+            const zoneCat = zone.dataset.category;
+            const zoneItems = zone.querySelector('.zone-items');
+            const clone = selectedItem.cloneNode(true);
+            clone.classList.remove('selected');
+            clone.onclick = null;
+
+            if (itemType === zoneCat) {
+                clone.classList.add('correct');
+                zone.classList.add('correct-zone');
+                simState.correct++;
+                showFeedback('simFeedback', 'success', `🎉 Correct! ${selectedItem.dataset.name} belongs to the ${zone.querySelector('h4').textContent} era.`);
+            } else {
+                clone.classList.add('wrong');
+                zone.classList.add('wrong-zone');
+                simState.wrong++;
+                showFeedback('simFeedback', 'warning', `❌ Not quite! ${selectedItem.dataset.name} doesn't belong here. Try another generation.`);
+            }
+
+            zoneItems.appendChild(clone);
+            selectedItem.classList.add('placed');
+            selectedItem.style.opacity = '0.3';
+            selectedItem.style.pointerEvents = 'none';
+            selectedItem.classList.remove('selected');
+            simState.remaining--;
+            selectedItem = null;
+            updateScore();
+
+            if (simState.remaining === 0) {
+                const pct = Math.round((simState.correct / 15) * 100);
+                let msg = '';
+                if (pct >= 80) msg = `🏆 Excellent! You scored ${pct}%. You really know your computer generations!`;
+                else if (pct >= 60) msg = `👍 Good job! You scored ${pct}%. Review the Learn section and try again!`;
+                else msg = `📚 Keep learning! You scored ${pct}%. Check the Learn tab for more details.`;
+                showFeedback('simFeedback', pct >= 80 ? 'success' : 'warning', msg);
+            }
+        }
+
+        function checkAnswers() {
+            const unplaced = document.querySelectorAll('.draggable-item:not(.placed)');
+            if (unplaced.length > 0) {
+                showFeedback('simFeedback', 'info', `⏳ You have ${unplaced.length} items left to place! Keep going!`);
+                return;
+            }
+            const pct = Math.round((simState.correct / 15) * 100);
+            let msg = '';
+            if (pct >= 80) msg = `🏆 Excellent! You scored ${pct}%. You really know your computer generations!`;
+            else if (pct >= 60) msg = `👍 Good job! You scored ${pct}%. Review the Learn section and try again!`;
+            else msg = `📚 Keep learning! You scored ${pct}%. Check the Learn tab for more details.`;
+            showFeedback('simFeedback', pct >= 80 ? 'success' : 'warning', msg);
+        }
+
+        function showFeedback(id, type, msg) {
+            const el = document.getElementById(id);
+            el.className = 'feedback-msg show ' + type;
+            el.innerHTML = msg;
+        }
+
+        initSimulation();
+
+        const quizQuestions = [
+            {
+                question: "Which technology was used in the First Generation of computers?",
+                options: ["Transistors", "Vacuum Tubes", "Integrated Circuits", "Microprocessors"],
+                correct: 1,
+                explanation: "First Generation computers (1940–1956) used Vacuum Tubes to process data."
+            },
+            {
+                question: "What made Third Generation computers smaller and faster than Second Generation?",
+                options: ["Transistors", "Vacuum Tubes", "Integrated Circuits (ICs)", "Artificial Intelligence"],
+                correct: 2,
+                explanation: "Integrated Circuits (ICs) packed multiple transistors onto a single silicon chip, making computers much smaller and faster."
+            },
+            {
+                question: "Which generation introduced the microprocessor — putting the entire CPU on one chip?",
+                options: ["Second Generation", "Third Generation", "Fourth Generation", "Fifth Generation"],
+                correct: 2,
+                explanation: "The Fourth Generation (1971–Present) introduced microprocessors, enabling personal computers and the modern computing era."
+            }
+        ];
+
+        let quizAnswers = {};
+        let quizSubmitted = false;
+
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            quizAnswers = {};
+            quizSubmitted = false;
+            document.getElementById('quizResult').style.display = 'none';
+
+            quizQuestions.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-question';
+                div.innerHTML = `
+                    <p><strong>Q${idx + 1}.</strong> ${q.question}</p>
+                    <div class="quiz-options" id="q${idx}">
+                        ${q.options.map((opt, i) => `
+                            <button class="quiz-option" onclick="selectQuizOption(${idx}, ${i}, this)">${String.fromCharCode(65 + i)}. ${opt}</button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-primary';
+            btn.style.cssText = 'display:block;width:100%;margin-top:10px;background:var(--primary);';
+            btn.textContent = '📝 Submit Answers';
+            btn.onclick = submitQuiz;
+            container.appendChild(btn);
+        }
+
+        function selectQuizOption(qIdx, optIdx, btn) {
+            if (quizSubmitted) return;
+            quizAnswers[qIdx] = optIdx;
+            document.querySelectorAll(`#q${qIdx} .quiz-option`).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function submitQuiz() {
+            if (Object.keys(quizAnswers).length < quizQuestions.length) {
+                alert('Please answer all questions before submitting!');
+                return;
+            }
+            quizSubmitted = true;
+            let score = 0;
+            quizQuestions.forEach((q, idx) => {
+                const opts = document.querySelectorAll(`#q${idx} .quiz-option`);
+                opts.forEach((btn, i) => {
+                    btn.disabled = true;
+                    if (i === q.correct) {
+                        btn.classList.add('correct');
+                        btn.innerHTML += ' ✅';
+                    } else if (i === quizAnswers[idx] && i !== q.correct) {
+                        btn.classList.add('incorrect');
+                        btn.innerHTML += ' ❌';
+                    }
+                });
+                if (quizAnswers[idx] === q.correct) score++;
+            });
+
+            const result = document.getElementById('quizResult');
+            const title = document.getElementById('resultTitle');
+            const text = document.getElementById('resultText');
+            result.style.display = 'block';
+
+            if (score === quizQuestions.length) {
+                title.innerHTML = '🏆 Perfect Score!';
+                title.style.color = 'var(--success)';
+                text.innerHTML = `You got <strong>${score}/${quizQuestions.length}</strong> correct. You have mastered the Generations of Computers! 🎉`;
+            } else if (score >= 2) {
+                title.innerHTML = '👍 Good Job!';
+                title.style.color = 'var(--accent)';
+                text.innerHTML = `You got <strong>${score}/${quizQuestions.length}</strong> correct. Review the Learn tab and try again!`;
+            } else {
+                title.innerHTML = '📚 Keep Learning!';
+                title.style.color = 'var(--danger)';
+                text.innerHTML = `You got <strong>${score}/${quizQuestions.length}</strong> correct. Spend more time in the Learn and Simulate sections.`;
+            }
+        }
+
+        function resetQuiz() {
+            initQuiz();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a5276">
+    <title>Ile-Eko Offline Learning Library</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #f39c12;
+            --success: #27ae60;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #e8f4f8 0%, #f5f7fa 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .app-header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+        .app-header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+        .lagos-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.8rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .breadcrumb a { color: var(--secondary); text-decoration: none; font-weight: 600; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .hero {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .hero h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
+        .hero p { color: #6c757d; font-size: 0.9rem; line-height: 1.6; }
+        .offline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #d4edda;
+            color: #155724;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .offline-badge::before {
+            content: "";
+            width: 8px; height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover, .card:active {
+            transform: translateY(-4px);
+            border-color: var(--secondary);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .card-icon {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.8rem;
+        }
+        .card h3 { font-size: 1rem; color: var(--dark); margin-bottom: 4px; }
+        .card p { font-size: 0.75rem; color: #6c757d; }
+        .card.locked { opacity: 0.5; pointer-events: none; }
+        .card.locked .card-icon { background: #adb5bd; }
+        .subject-list { display: flex; flex-direction: column; gap: 12px; }
+        .subject-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .subject-item:hover { border-left: 4px solid var(--accent); }
+        .subject-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .subject-info { flex: 1; }
+        .subject-info h4 { font-size: 1rem; color: var(--dark); }
+        .subject-info p { font-size: 0.8rem; color: #6c757d; margin-top: 2px; }
+        .subject-arrow { color: #adb5bd; font-size: 1.2rem; }
+        .topic-list { display: flex; flex-direction: column; gap: 10px; }
+        .topic-item {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            border-left: 4px solid transparent;
+        }
+        .topic-item:hover { border-left-color: var(--secondary); background: #f8f9fa; }
+        .topic-item .topic-status {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .topic-status.available { background: #e8f4f8; color: var(--primary); }
+        .topic-status.soon { background: #f8f9fa; color: #adb5bd; }
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin: 24px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .app-footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .install-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+            display: none;
+            z-index: 200;
+        }
+        .install-btn.show { display: block; }
+        @media (max-width: 480px) {
+            .app-header h1 { font-size: 1.3rem; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card { padding: 18px 12px; }
+            .container { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <h1>🏫 Ile-Eko</h1>
+        <p>Offline Digital Learning Library</p>
+        <div class="lagos-badge">Lagos State Public Service Innovation</div>
+    </header>
+    <div class="breadcrumb" id="breadcrumb">
+        <a href="#" onclick="showView('home')">🏠 Home</a>
+    </div>
+    <div class="container">
+        <div id="view-home" class="view active">
+            <div class="hero">
+                <h2>📚 Learn Anywhere. Learn Anytime.</h2>
+                <p>No internet required. Download once, study forever. Select your class below to begin.</p>
+                <div class="offline-badge">✅ Works Offline</div>
+            </div>
+            <h3 class="section-title">🎓 Select Your Class</h3>
+            <div class="grid">
+                <a href="#" class="card" onclick="showView('jss1')">
+                    <div class="card-icon">🎒</div>
+                    <h3>JSS 1</h3>
+                    <p>Basic Science & Technology</p>
+                </a>
+                <a href="#" class="card locked">
+                    <div class="card-icon">🔒</div>
+                    <h3>JSS 2</h3>
+                    <p>Coming Soon</p>
+                </a>
+                <a href="#" class="card locked">
+                    <div class="card-icon">🔒</div>
+                    <h3>JSS 3</h3>
+                    <p>Coming Soon</p>
+                </a>
+            </div>
+        </div>
+        <div id="view-jss1" class="view">
+            <div class="hero">
+                <h2>🎒 Junior Secondary 1</h2>
+                <p>Basic Science and Technology Curriculum</p>
+            </div>
+            <h3 class="section-title">📖 Select Subject</h3>
+            <div class="subject-list">
+                <a href="jss1/computer-studies/index.html" class="subject-item">
+                    <div class="subject-icon" style="background:#e8f4f8;">💻</div>
+                    <div class="subject-info">
+                        <h4>Computer Studies</h4>
+                        <p>3 topics available | 1 interactive simulation</p>
+                    </div>
+                    <div class="subject-arrow">▶</div>
+                </a>
+                <a href="#" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                    <div class="subject-icon" style="background:#f8f9fa;">🔬</div>
+                    <div class="subject-info">
+                        <h4>Basic Science</h4>
+                        <p>Coming in Phase 2</p>
+                    </div>
+                    <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+                </a>
+                <a href="#" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                    <div class="subject-icon" style="background:#f8f9fa;">⚙️</div>
+                    <div class="subject-info">
+                        <h4>Basic Technology</h4>
+                        <p>Coming in Phase 2</p>
+                    </div>
+                    <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+                </a>
+                <a href="#" class="subject-item" style="opacity:0.5; pointer-events:none;">
+                    <div class="subject-icon" style="background:#f8f9fa;">🏃</div>
+                    <div class="subject-info">
+                        <h4>Physical & Health Education</h4>
+                        <p>Coming in Phase 2</p>
+                    </div>
+                    <div class="subject-arrow" style="color:#adb5bd;">▶</div>
+                </a>
+            </div>
+        </div>
+        <footer class="app-footer">
+        <p>🏫 Ile-Eko Offline Digital Library</p>
+        <p>Lagos State Ministry of Education | 2026</p>
+    </footer>
+    <button class="install-btn" id="installBtn" onclick="installApp()">📲 Install App</button>
+    <script>
+        const breadcrumbs = {
+            'home': '<a href="#" onclick="showView('home')">🏠 Home</a>',
+            'jss1': '<a href="#" onclick="showView('home')">🏠 Home</a> <span>/</span> <a href="#" onclick="showView('jss1')">🎒 JSS 1</a>',
+            'computer-studies': '<a href="#" onclick="showView('home')">🏠 Home</a> <span>/</span> <a href="#" onclick="showView('jss1')">🎒 JSS 1</a> <span>/</span> <span>💻 Computer Studies</span>'
+        };
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            document.getElementById('breadcrumb').innerHTML = breadcrumbs[viewName] || breadcrumbs['home'];
+            window.scrollTo(0, 0);
+        }
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').classList.add('show');
+        });
+        async function installApp() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('installBtn').classList.remove('show');
+            }
+            deferredPrompt = null;
+        }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>

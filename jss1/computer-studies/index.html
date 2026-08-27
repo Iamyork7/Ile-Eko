@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ile-Eko | Digital Learning Library</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #f39c12;
+            --success: #27ae60;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: var(--dark);
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        header p { font-size: 0.95rem; opacity: 0.9; }
+        .subtitle { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-header h2 { font-size: 1rem; color: var(--primary); }
+        .progress-header span { font-size: 0.85rem; color: #6c757d; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--secondary));
+            width: 66%;
+            transition: width 0.5s;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin: 20px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .topic-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: var(--secondary);
+        }
+        .topic-card .topic-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .topic-card h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .topic-card p {
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .topic-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .topic-tag {
+            background: #e8f4f8;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .topic-tag.sim { background: #d4edda; color: #155724; }
+        .topic-tag.new { background: #fff3cd; color: #856404; }
+
+        .coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .coming-soon:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-color: transparent;
+        }
+        .coming-badge {
+            display: inline-block;
+            background: #e9ecef;
+            color: #6c757d;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.4rem; }
+            .topic-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Ile-Eko Digital Library</h1>
+            <p>Interactive Learning Modules for Basic Computer Studies</p>
+            <p class="subtitle">JSS1 Curriculum — Federal Ministry of Education, Nigeria</p>
+        </header>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2>📊 Your Progress</h2>
+                <span>2 of 3 topics available</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p style="margin-top:8px;font-size:0.8rem;color:#6c757d;">Complete all topics to master JSS1 Computer Studies!</p>
+        </div>
+
+        <h2 class="section-title">📖 Available Topics</h2>
+        <div class="topic-grid">
+            <div class="topic-card" onclick="openTopic('topics/hardware-components/index.html')">
+                <div class="topic-icon">🖥️</div>
+                <h3>Hardware Components</h3>
+                <p>Learn about the Monitor, System Unit, Keyboard, Mouse, and Printer. Build your own virtual computer!</p>
+                <div class="topic-meta">
+                    <span class="topic-tag">JSS1</span>
+                    <span class="topic-tag">Week 1</span>
+                    <span class="topic-tag sim">Simulation</span>
+                </div>
+            </div>
+
+            <div class="topic-card" onclick="openTopic('topics/generations-of-computers/index.html')">
+                <div class="topic-icon">📅</div>
+                <h3>Generations of Computers</h3>
+                <p>Explore the 5 generations of computer technology from vacuum tubes to AI — with an interactive matching lab!</p>
+                <div class="topic-meta">
+                    <span class="topic-tag">JSS1</span>
+                    <span class="topic-tag">Week 4</span>
+                    <span class="topic-tag new">New!</span>
+                    <span class="topic-tag sim">Simulation</span>
+                </div>
+            </div>
+
+            <div class="topic-card" onclick="openTopic('topics/data-and-information/index.html')">
+                <div class="topic-icon">📊</div>
+                <h3>Data and Information</h3>
+                <p>Understand the difference between raw data and processed information. Coming with sorting simulations!</p>
+                <div class="topic-meta">
+                    <span class="topic-tag">JSS1</span>
+                    <span class="topic-tag">Week 2</span>
+                    <span class="topic-tag">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🔒 Coming Soon</h2>
+        <div class="topic-grid">
+            <div class="topic-card coming-soon">
+                <div class="topic-icon">🌐</div>
+                <h3>Computer Networks</h3>
+                <p>LAN, WAN, Internet, and network topologies. Build virtual network diagrams!</p>
+                <span class="coming-badge">🔒 Locked</span>
+            </div>
+            <div class="topic-card coming-soon">
+                <div class="topic-icon">🛡️</div>
+                <h3>Computer Security</h3>
+                <p>Viruses, malware, firewalls, and safe computing practices.</p>
+                <span class="coming-badge">🔒 Locked</span>
+            </div>
+            <div class="topic-card coming-soon">
+                <div class="topic-icon">💾</div>
+                <h3>Storage Devices</h3>
+                <p>Hard disks, SSDs, flash drives, and cloud storage comparisons.</p>
+                <span class="coming-badge">🔒 Locked</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>🎓 Ile-Eko — "House of Learning" in Yoruba</p>
+            <p>Built for JSS1 Students | Basic Computer Studies Curriculum</p>
+        </footer>
+    </div>
+
+    <script>
+        function openTopic(url) {
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
